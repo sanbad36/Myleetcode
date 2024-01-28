@@ -1,47 +1,32 @@
-class UnionFind {
-    int[] parent;
-    int[] rank;
-    public UnionFind(int size) {
-        parent = new int[size];
-        for (int i = 0; i < size; i++)
-            parent[i] = i;
-        rank = new int[size];
-    }
-    public int find(int x) {
-        if (parent[x] != x)
-            parent[x] = find(parent[x]);
-        return parent[x];
-    }
-    public void union_set(int x, int y) {
-        int xset = find(x), yset = find(y);
-        if (xset == yset) {
-            return;
-        } else if (rank[xset] < rank[yset]) {
-            parent[xset] = yset;
-        } else if (rank[xset] > rank[yset]) {
-            parent[yset] = xset;
-        } else {
-            parent[yset] = xset;
-            rank[xset]++;
-        }
-    }
-}
-
 class Solution {
-    public int findCircleNum(int[][] isConnected) {
-        int n = isConnected.length;
-        UnionFind dsu = new UnionFind(n);
-        int numberOfComponents = n;
-
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (isConnected[i][j] == 1 && dsu.find(i) != dsu.find(j)) {
-                    numberOfComponents--;
-                    dsu.union_set(i, j);
+    
+    private void bfsGraphTraversal(int startingNode, boolean isVisitedList[], int[][] isConnected){
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(startingNode);
+        isVisitedList[startingNode] = true;
+        while(!queue.isEmpty()){
+            int currentNode = queue.poll();
+            for(int listIterator = 0; listIterator < isConnected.length; listIterator++){
+                if(isConnected[currentNode][listIterator] == 1 && !isVisitedList[listIterator]){
+                    queue.offer(listIterator);
+                    isVisitedList[listIterator] = true;
                 }
             }
-        }
-
-        return numberOfComponents;
+        }         
+    }
+    
+    public int findCircleNum(int[][] isConnected) {
+        
+        int provinceCount = 0;
+        int totalNode = isConnected.length;
+        boolean isVisitedList[] = new boolean[totalNode];
+                
+        for(int graphNodeIterator = 0; graphNodeIterator < totalNode; graphNodeIterator++){
+            if(!isVisitedList[graphNodeIterator]){
+               bfsGraphTraversal(graphNodeIterator, isVisitedList, isConnected);
+               provinceCount++;
+            }
+        }   
+        return provinceCount;
     }
 }
