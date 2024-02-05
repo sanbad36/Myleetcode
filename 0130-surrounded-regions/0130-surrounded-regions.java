@@ -27,6 +27,7 @@ class Solution {
             }
         }  
         
+        // travese the first col and last col
         for(int i=0;i<n; i++){  
             if(visited[i][0] == 0 && board[i][0] == 'O'){
                 dfs(i,0,visited, board, delRow, delCol,n,m);
@@ -36,7 +37,7 @@ class Solution {
             }
         }
         
-        
+      // final verdict
         for(int i=0; i<n; i++){
             for(int j=0; j<m; j++){    
                 if(board[i][j] == 'O' && visited[i][j] != 1){
@@ -46,3 +47,4 @@ class Solution {
         }
     }
 }
+// main intution is check for the boundry O's and apply the dfs for from it, and mark it as visited. Which apparently states that, it won't be converterd to the 'X'
