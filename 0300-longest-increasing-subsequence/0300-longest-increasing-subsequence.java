@@ -1,25 +1,36 @@
 class Solution {
-    public int lengthOfLIS(int[] nums) {
-        
-        int n = nums.length;
-        if(n==1) return 1;
-        int dp[] = new int[n];
-        dp[0] = 1;
-        int current_max = 0;
-        int overall_max=0;
-        
-        for(int i=1 ; i<n ; i++)
-        {
-            current_max = 0;
-            for(int j=0 ; j<i ; j++)
-            {
-                if(nums[j] < nums[i])
-                    if(dp[j] > current_max)
-                        current_max = dp[j];    
-                dp[i] = current_max + 1;
-                overall_max = (dp[i] > overall_max ? dp[i] : overall_max);
-            }
+
+ static int getAns(int arr[], int n, int ind, int prev_index, int[][] dp) {
+        // Base condition
+        if (ind == n) {
+            return 0;
         }
-        return overall_max;   
+
+        if (dp[ind][prev_index + 1] != -1) {
+            return dp[ind][prev_index + 1];
+        }
+
+        int notTake = 0 + getAns(arr, n, ind + 1, prev_index, dp);
+
+        int take = 0;
+
+        if (prev_index == -1 || arr[ind] > arr[prev_index]) {
+            take = 1 + getAns(arr, n, ind + 1, ind, dp);
+        }
+
+        dp[ind][prev_index + 1] = Math.max(notTake, take);
+
+        return dp[ind][prev_index + 1];
+    }
+
+
+
+    public int lengthOfLIS(int[] nums) {
+      int n = nums.length;
+      int dp[][] = new int[n][n + 1]; // coordinate change
+                for (int row[] : dp) {
+            Arrays.fill(row, -1);
+        }
+        return getAns(nums, n, 0, -1, dp);
     }
 }
