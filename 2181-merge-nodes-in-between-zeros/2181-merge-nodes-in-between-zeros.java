@@ -9,26 +9,19 @@
  * }
  */
 class Solution {
-
     public ListNode mergeNodes(ListNode head) {
-        // Start with the first non-zero value.
         head = head.next;
         if (head == null) {
             return head;
         }
-
-        // Initialize a dummy head node.
-        ListNode temp = head;
+        ListNode dummy = head;
         int sum = 0;
-        while (temp.val != 0) {
-            sum += temp.val;
-            temp = temp.next;
+        while (dummy.val != 0) {
+            sum += dummy.val;
+            dummy = dummy.next;
         }
-
-        // Store the sum in head's value.
         head.val = sum;
-        // Store head's next node as the recursive result for temp node.
-        head.next = mergeNodes(temp);
+        head.next = mergeNodes(dummy);
         return head;
     }
 }
