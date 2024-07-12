@@ -1,41 +1,56 @@
+import java.util.*;
+
 class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        
+        Set<String> wordsSet = new HashSet<>(wordList);
+        if (!wordsSet.contains(endWord)) {
+            return 0;
+        }
+
         Queue<String> queue = new LinkedList<>();
-        Set<String> wordListSet = new HashSet();
-        for(String str:wordList){
-            wordListSet.add(str);
-        }
-        
-        if(!wordListSet.contains(endWord)) return 0;
-        
         queue.add(beginWord);
-        int lsize = 0;
-        int depth = 0;
-        
-        while(!queue.isEmpty()){
-          depth += 1;
-           lsize = queue.size();
-           while(lsize-- != 0){
-               
-                System.out.println(queue.size() + " "+depth);
-                String currentString = queue.poll();  
-                for(int i=0;i<currentString.length();i++){
-                    for(char ch = 'a';ch <= 'z';ch++){
-                    String checkInSet =  currentString.substring(0, i) + ch + currentString.substring(i + 1);
-                    if(checkInSet.equals(currentString)) continue;
-                    if(wordListSet.contains(checkInSet)){
-                        if(checkInSet.equals(endWord)) return depth + 1;
-                        queue.add(checkInSet);
-                        wordListSet.remove(checkInSet);
-                    }     
+
+        Set<String> visitedWords = new HashSet<>();
+        visitedWords.add(beginWord);
+
+        int changes = 1;
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                String word = queue.poll();
+                if (word.equals(endWord)) {
+                    return changes;
                 }
+
+                for (String nei : new HashSet<>(wordsSet)) { // use a copy of wordsSet to avoid ConcurrentModificationException
+                    if (checkOneDiff(word, nei)) {
+                        if (!visitedWords.contains(nei)) {
+                            queue.add(nei);
+                            visitedWords.add(nei);
+                            wordsSet.remove(nei); // remove the word from wordsSet to prevent reprocessing
+                        }
+                    }
                 }
-               
-               
-           }   
-           
+            }
+            changes++;
         }
-        return 0;
+        return 0; // return 0 if no sequence is found
+    }
+
+    boolean checkOneDiff(String word1, String word2) {
+        if (word1.length() != word2.length()) {
+            return false;
+        }
+        int diffCount = 0;
+        for (int i = 0; i < word1.length(); i++) {
+            if (word1.charAt(i) != word2.charAt(i)) {
+                diffCount++;
+            }
+            if (diffCount > 1) {
+                return false;
+            }
+        }
+        return diffCount == 1;
     }
 }
