@@ -1,5 +1,3 @@
-import java.util.*;
-
 class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         Set<String> wordsSet = new HashSet<>(wordList);
@@ -23,19 +21,19 @@ class Solution {
                     return changes;
                 }
 
-                for (String nei : new HashSet<>(wordsSet)) { // use a copy of wordsSet to avoid ConcurrentModificationException
+                for (String nei : new HashSet<>(wordsSet)) { 
                     if (checkOneDiff(word, nei)) {
                         if (!visitedWords.contains(nei)) {
                             queue.add(nei);
                             visitedWords.add(nei);
-                            wordsSet.remove(nei); // remove the word from wordsSet to prevent reprocessing
+                            wordsSet.remove(nei); 
                         }
                     }
                 }
             }
             changes++;
         }
-        return 0; // return 0 if no sequence is found
+        return 0; 
     }
 
     boolean checkOneDiff(String word1, String word2) {
