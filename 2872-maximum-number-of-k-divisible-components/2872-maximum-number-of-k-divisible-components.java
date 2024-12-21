@@ -1,3 +1,9 @@
+// copied the code from the solution, earlier I wrote the code in DFS, but that was not passing some of the test cases
+// so I read the code from the solution.
+
+// TODO: Try to solve that again in DFS
+
+
 class Solution {
 
     public int maxKDivisibleComponents(
